@@ -1,0 +1,288 @@
+/*
+ * Scan only the React sources.
+ *
+ * Left on auto-detection, Tailwind walks up to the repo root and treats prose as
+ * code: any class name merely *mentioned* in a .md file (this project's docs
+ * reference rounded-xl, shadow-md, etc.) gets compiled into the bundle, which
+ * silently inflated dist/assets/*.css from ~32 kB to ~66 kB. `source(none)`
+ * turns auto-detection off; the explicit glob below turns it back on for the
+ * only files that actually contain class names.
+ */
+@import "tailwindcss" source(none);
+
+@source "./**/*.{ts,tsx}";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-serif: "Source Serif 4", ui-serif, Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --color-paper: #faf9f6;
+  --color-surface: #faf9f6;
+  --color-ink: #1b1c18;
+  --color-ink-muted: #6e6e68;
+  --color-line: #e8e5dc;
+  --color-accent: #1f6d57;
+  --color-accent-soft: #e4efe9;
+  --color-danger: #b3452f;
+  --color-danger-soft: #f6e6e1;
+
+  --color-paper-dark: #14161a;
+  --color-surface-dark: #14161a;
+  --color-ink-dark: #eeede8;
+  --color-ink-muted-dark: #9a9a94;
+  --color-line-dark: #22252b;
+  --color-accent-dark: #56d6a8;
+  --color-accent-soft-dark: #1d332c;
+  --color-danger-dark: #e07a63;
+  --color-danger-soft-dark: #3a2420;
+}
+
+/*
+ * Semantic layer for the ui/* primitives. Maps the shadcn-style token names
+ * onto the warm editorial palette above so primitives written for shadcn/MR
+ * conventions (bg-background, text-muted-foreground, border-border, ring-ring,
+ * rounded-md…) inherit the same voice as the hand-rolled components.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+}
+
+/*
+ * Soft-UI shadow tones. Neumorphism needs surfaces to sit on the same base as
+ * the page (--color-surface is now the same as --color-paper), with a dark+light
+ * shadow pair doing the "raised" and "pressed" work instead of borders.
+ */
+@layer base {
+  :root {
+    --soft-lo: #dcd7cc;
+    --soft-hi: #ffffff;
+  }
+
+  .dark {
+    --soft-lo: #0c0d10;
+    --soft-hi: #1f232a;
+  }
+}
+
+@utility soft {
+  box-shadow: 12px 12px 28px -10px var(--soft-lo), -12px -12px 28px -10px var(--soft-hi);
+}
+
+@utility soft-sm {
+  box-shadow: 5px 5px 12px -4px var(--soft-lo), -5px -5px 12px -4px var(--soft-hi);
+}
+
+@utility soft-hover {
+  box-shadow: 8px 8px 18px -6px var(--soft-lo), -8px -8px 18px -6px var(--soft-hi);
+}
+
+@utility soft-inset {
+  box-shadow: inset 5px 5px 10px var(--soft-lo), inset -5px -5px 10px var(--soft-hi);
+}
+
+@utility soft-inset-sm {
+  box-shadow: inset 3px 3px 7px var(--soft-lo), inset -3px -3px 7px var(--soft-hi);
+}
+
+@utility soft-band {
+  box-shadow: inset 0 1px 0 var(--soft-hi), inset 0 -1px 1px var(--soft-lo);
+}
+
+@layer base {
+  :root {
+    --background: var(--color-paper);
+    --foreground: var(--color-ink);
+    --card: var(--color-surface);
+    --card-foreground: var(--color-ink);
+    --popover: var(--color-surface);
+    --popover-foreground: var(--color-ink);
+    --primary: var(--color-accent);
+    --primary-foreground: var(--color-paper);
+    --secondary: var(--color-accent-soft);
+    --secondary-foreground: var(--color-accent);
+    --muted: #f0efe9;
+    --muted-foreground: var(--color-ink-muted);
+    --accent: var(--color-accent);
+    --accent-foreground: var(--color-paper);
+    --destructive: var(--color-danger);
+    --destructive-foreground: var(--color-paper);
+    --border: var(--color-line);
+    --input: var(--color-line);
+    --ring: var(--color-accent);
+  }
+
+  .dark {
+    --background: var(--color-paper-dark);
+    --foreground: var(--color-ink-dark);
+    --card: var(--color-surface-dark);
+    --card-foreground: var(--color-ink-dark);
+    --popover: var(--color-surface-dark);
+    --popover-foreground: var(--color-ink-dark);
+    --primary: var(--color-accent-dark);
+    --primary-foreground: var(--color-ink);
+    --secondary: var(--color-accent-soft-dark);
+    --secondary-foreground: var(--color-accent-dark);
+    --muted: #1f232a;
+    --muted-foreground: var(--color-ink-muted-dark);
+    --accent: var(--color-accent-dark);
+    --accent-foreground: var(--color-ink);
+    --destructive: var(--color-danger-dark);
+    --destructive-foreground: var(--color-paper-dark);
+    --border: var(--color-line-dark);
+    --input: var(--color-line-dark);
+    --ring: var(--color-accent-dark);
+  }
+
+  * {
+    border-color: var(--border);
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-sans);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nudge {
+  0% {
+    opacity: 0;
+    transform: translateX(0) translateY(0) scale(1);
+  }
+  20% {
+    opacity: 1;
+    transform: translateX(2px) translateY(0) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(9px) translateY(-2px) scale(1);
+  }
+  75% {
+    opacity: 0.9;
+    transform: translateX(16px) translateY(0) scale(1.12);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(16px) translateY(0) scale(1);
+  }
+}
+
+@keyframes halo {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.07);
+  }
+}
+
+@keyframes overlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes contentIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes overlayOut {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes contentOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+::selection {
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+.dark ::selection {
+  background-color: var(--color-accent-soft-dark);
+  color: var(--color-accent-dark);
+}
+
+/* focus ring, consistent + visible */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+.dark :focus-visible {
+  outline-color: var(--color-accent-dark);
+}
